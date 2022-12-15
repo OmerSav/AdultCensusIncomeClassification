@@ -20,6 +20,6 @@ def categories_show(categorical_df):
             continue
         categories.loc[col_name] = np.concatenate(
             (unqs, np.array([np.nan, ] * (max_cat - len(unqs)))))
-
+    count_unique.columns = ['Unique Value Count']
     html_table(count_unique)
     html_table(categories)
