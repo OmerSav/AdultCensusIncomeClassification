@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
 import click
 import logging
 from pathlib import Path
+import joblib
+
+import pandas as pd
 from dotenv import find_dotenv, load_dotenv
+from src.utils import build_features
 
 
 @click.command()
@@ -14,6 +19,13 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
+    inp_dir = Path(input_filepath)
+    data_files = os.listdir(input_filepath)
+    enc = joblib.load('./models/featurebuild/0.1-onehotencoder.joblib')
+    for file in data_files:
+        df = pd.read_csv(inp_dir / file)
+        df_final = build_features(df, enc)
+        df_final.to_csv(Path(output_filepath) / file, index=False)
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import pandas as pd
 
 from sklearn.metrics import classification_report, ConfusionMatrixDisplay, \
     RocCurveDisplay, PrecisionRecallDisplay, confusion_matrix, roc_curve
+from sklearn.preprocessing import OneHotEncoder
 
 
 def html_table(df):
@@ -28,10 +29,14 @@ def categories_show(categorical_df):
     html_table(categories)
 
 
-def classification_scores(model, X, y, threshold=0.5, plots=True):
+def classification_scores(model, X, y, threshold=0.5, plots=True,
+                          tf_model=False):
     if (isinstance(y, pd.Series)):
         y = y.values
-    y_pred_proba = model.predict_proba(X)[:, 1]
+    if tf_model:
+        y_pred_proba = model.predict(X)[:, 0]
+    else:
+        y_pred_proba = model.predict_proba(X)[:, 1]
     y_pred = (y_pred_proba >= threshold).astype('int32')
     cls_reports = classification_report(y, y_pred, output_dict=True)
     confusion = pd.DataFrame(confusion_matrix(y, y_pred), index=[0, 1],
@@ -61,3 +66,44 @@ def find_threshold(roc_curve_df):
     threshold = df['Thresholds'][ind]
     print(f'\n\t The best threshold for balancing recall is: {threshold}\n')
     return threshold
+
+
+def build_features(df: pd.DataFrame, enc: OneHotEncoder) -> pd.DataFrame:
+    '''Process new data to enter model without scaling
+    Operations -> Handle missings, apply one hot encoding on data.
+
+    Args:
+        df (pandas.DataFrame): df to procces
+        enc (sklearn.preprocessing.OneHotEncoder): One hot encoder fitted on
+        train set
+
+    Returns:
+        (pd.DataFrame): Dataset for models without scaling
+    '''
+    print(f'Before drop total row is: {len(df)}')
+    if 'SalePrice' in df.columns:
+        df = df[df['SalePrice'] < 500000]
+    df.dropna(axis=0, subset=['Electrical', 'MasVnrArea'], inplace=True)
+    df['GarageYrBlt'] = df['GarageYrBlt'].fillna(df['GarageYrBlt'].mean())
+    df = df.drop(['PoolQC', 'MiscFeature', 'Alley'], axis=1)
+    df['Fence'] = df['Fence'].fillna('None')
+    df['FireplaceQu'] = df['FireplaceQu'].fillna('None')
+    df['LotFrontage'] = df.groupby('Neighborhood')['LotFrontage'].transform(
+        lambda value: value.fillna(value.mean()))
+    df.drop(axis=1, columns=['Id'], inplace=True)
+    nullable_cols = ['GarageFinish', 'GarageQual', 'GarageCond', 'GarageType',
+                     'BsmtCond',
+                     'BsmtExposure', 'BsmtQual', 'BsmtFinType1', 'BsmtFinType2']
+    fill_cols = [col for col in df.columns if col not in nullable_cols]
+    df.dropna(axis=0, subset=fill_cols, inplace=True)
+    print(f'After drop total row is: {len(df)}')
+
+    df.reset_index(inplace=True, drop=True)
+    df['MSSubClass'] = df['MSSubClass'].apply(str)
+    object_df = df.select_dtypes(include='object')
+    numeric_df = df.select_dtypes(exclude='object')
+    df_objects_dummies = enc.transform(object_df)
+    df_encoded = pd.concat((numeric_df, pd.DataFrame(df_objects_dummies)),
+                           axis=1)
+    print(df_encoded.shape)
+    return df_encoded
