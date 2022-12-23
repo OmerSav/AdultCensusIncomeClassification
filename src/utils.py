@@ -80,28 +80,23 @@ def build_features(df: pd.DataFrame, enc: OneHotEncoder) -> pd.DataFrame:
     Returns:
         (pd.DataFrame): Dataset for models without scaling
     '''
-    print(f'Before drop total row is: {len(df)}')
-    if 'SalePrice' in df.columns:
-        df = df[df['SalePrice'] < 500000]
-    df.dropna(axis=0, subset=['Electrical', 'MasVnrArea'], inplace=True)
-    df['GarageYrBlt'] = df['GarageYrBlt'].fillna(df['GarageYrBlt'].mean())
-    df = df.drop(['PoolQC', 'MiscFeature', 'Alley'], axis=1)
-    df['Fence'] = df['Fence'].fillna('None')
-    df['FireplaceQu'] = df['FireplaceQu'].fillna('None')
-    df['LotFrontage'] = df.groupby('Neighborhood')['LotFrontage'].transform(
-        lambda value: value.fillna(value.mean()))
-    df.drop(axis=1, columns=['Id'], inplace=True)
-    nullable_cols = ['GarageFinish', 'GarageQual', 'GarageCond', 'GarageType',
-                     'BsmtCond',
-                     'BsmtExposure', 'BsmtQual', 'BsmtFinType1', 'BsmtFinType2']
-    fill_cols = [col for col in df.columns if col not in nullable_cols]
-    df.dropna(axis=0, subset=fill_cols, inplace=True)
-    print(f'After drop total row is: {len(df)}')
 
-    df.reset_index(inplace=True, drop=True)
-    df['MSSubClass'] = df['MSSubClass'].apply(str)
+    # Handling Missing Data
+    df = df.replace(to_replace='?', value=None)
+    df['occupation'].fillna('no-occupation', inplace=True)
+    df['workclass'].fillna('Never-worked', inplace=True)
+    df['native.country'].fillna('others', inplace=True)
+
+    # Encoding data
+    df.reset_index(drop=True, inplace=True)
     object_df = df.select_dtypes(include='object')
     numeric_df = df.select_dtypes(exclude='object')
+    if 'income' in object_df.columns:
+        object_df.drop('income', axis=1, inplace=True)
+        # 1 represent income >50k and 0 represent income <= 50k
+        target_var = pd.get_dummies(df['income'], drop_first=True)
+        target_var.columns = ['income']
+        numeric_df = pd.concat((target_var, numeric_df), axis=1)
     df_objects_dummies = enc.transform(object_df)
     df_encoded = pd.concat((numeric_df, pd.DataFrame(df_objects_dummies)),
                            axis=1)
