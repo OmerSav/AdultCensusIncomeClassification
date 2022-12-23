@@ -1,25 +1,17 @@
-AdultCensusIncomeClassification
+Adult Census Income Classification
 ==============================
-
-Project for practice purpose. Data
-from https://www.kaggle.com/datasets/uciml/adult-census-income
+The project task
+from "[Adult Census Income -
+Predict whether income exceeds $50K/yr based on census data](https://www.kaggle.com/datasets/uciml/adult-census-income)"
 
 ### Data Description from Kaggle
 
-> The Ames Housing dataset was compiled by Dean De Cock for use in data science
-> education. It's an incredible alternative for data scientists looking for a
-> modernized and expanded version of the often cited Boston Housing dataset.
->
-> Ask a home buyer to describe their dream house, and they probably won't begin
-> with the height of the basement ceiling or the proximity to an east-west
-> railroad. But this playground competition's dataset proves that much more
-> influences price negotiations than the number of bedrooms or a white-picket
-> fence.
->
-> With 79 explanatory variables describing (almost) every aspect of residential
-> homes in Ames, Iowa, this competition challenges you to predict the final
-> price
-> of each home.
+> This data was extracted from the 1994 Census bureau database by Ronny Kohavi
+> and Barry Becker (Data Mining and Visualization, Silicon Graphics). A set of
+> reasonably clean records was extracted using the following conditions:
+> ((AAGE>16) && (AGI>100) && (AFNLWGT>1) && (HRSWK>0)). The prediction task is
+> to determine whether a person makes over $50K a year.
+
 
 Project Organization
 ------------
@@ -29,7 +21,6 @@ Project Organization
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── predictions    <- After using model predictions saved here.
-    │   ├── interim        <- Intermediate data that has been transformed.
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
@@ -38,9 +29,7 @@ Project Organization
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
     │                         the creator's initials, and a short `-` delimited description, e.g.
     │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
+    │ │
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
     │
     ├── requirements.txt   <- The requirements file for reproducing the analysis
@@ -62,7 +51,7 @@ Project Organization
 
 --------
 
-# **House Pricing Regression - Advanced Regression Techniques Project**
+# **Adult Census Income Classification**
 
 I am working on this task for practicing and demonstrating my expertise in Data
 Science.
@@ -80,8 +69,8 @@ pdf versions of these notebooks with same name in
 **reports** folder.
 Also you can find helper function on **src/utils.py** and data preparation
 training, prediction
-codes in **src**. This scripts coded for using easily on command line with *
-make*
+codes in **src**. This scripts coded for using easily on command line with
+*make*
 commmads (you can see detailed command prompt api from below).
 
 ## Model Training and Performance
@@ -91,20 +80,17 @@ commmads (you can see detailed command prompt api from below).
 I tried every model as hand-tuned or with grid search I reported all results.
 You can see models and frameworks/libraries in the table below.
 
-| Model                                            | Library - Framework |
-| :----------------------------------------------- | :-----------------: |
-| Multiple Regression                              |    scikit-learn    |
-| Polinomial Regression                            |    scikit-learn    |
-| Lasso Regression (l1 regularization)             |    scikit-learn    |
-| Ridge Regression (l2 regularization)             |    scikit-learn    |
-| ElasticNet Regression (l1 and l2 regularization) |    scikit-learn    |
-| Support Vector Regression                        |    scikit-learn    |
-| Decision Tree                                    |    scikit-learn    |
-| Random Forest                                    |    scikit-learn    |
-| Ada Boost                                        |    scikit-learn    |
-| Gradient Boosting                                |    scikit-learn    |
-| eXtreme Gradient Boosting                        |       XGBoost       |
-| Neural Network                                   |     TensorFlow     |
+| Model                     | Library - Framework |
+|:--------------------------|:-------------------:|
+| Logistic Regression       |    scikit-learn     |
+| Support Vector Machine    |    scikit-learn     |
+| K-Nearest Neighbors       |    scikit-learn     |
+| Decision Tree             |    scikit-learn     |
+| Random Forest             |    scikit-learn     |
+| Ada Boost                 |    scikit-learn     |
+| Gradient Boosting         |    scikit-learn     |
+| eXtreme Gradient Boosting |    XGBoost          |
+| Neural Network            |     TensorFlow      |
 
 ### Performance on Test Set
 
@@ -114,9 +100,11 @@ test set included after performance evaluation and trained final models.
 To validate, k-fold cross-validation was used on the training set.
 
 If you would like to you can also see the training set performance from
-**reports/0.3-os-models-training.pdf**.
+**reports/0.2-os-train-models.pdf**.
 
 ##### Test Set Performances
+
+# Tablo degisecek
 
 <table class="dataframe" style="border:1; border-color: grey">
   <thead>
@@ -234,9 +222,9 @@ If you would like to you can also see the training set performance from
 ### *make* data
 
 It generates handled and encoded data from raw data for training. There is
-already **train.csv** data to convert but if you want to train on different data
+already **adult.csv** data to convert but if you want to train on different data
 with the same structure and column names, simply put data in **data/raw/**
-folder with the naming **train.csv** and use this command from the project
+folder with the naming **adult.csv** and use this command from the project
 content root.
 
 ### *make* train_model
@@ -247,10 +235,10 @@ Proccessed training data.(*make data* command)
 
 **Usage**
 
-It trains model with **data/proccesed/train.csv** and then saves trained models
+It trains model with **data/proccesed/adult.csv** and then saves trained models
 to **models/trained/** folder.
-It also saves standart scaler and polynomial converter to **
-models/featurebuild/**.
+It also saves standart scaler and polynomial converter
+to **models/featurebuild/**.
 
 ### *make* predict
 
@@ -263,18 +251,17 @@ simply use *make train_model* command.
 
 It takes two arguments *model*, *data*
 
-> make predict model='elasticnet' data='.../somedatafolder/somedata.csv'
+> make predict model='gradient-boosting' data='.../somedatafolder/somedata.csv'
 
 Model argument could be any of them below:
 
 ```
-'regression', 'polynomial-regression', 'lasso', 'ridge',
-'elasticnet', 'SVR', 'decision-tree', 'ada-boost',
-'random-forest', 'gradient-boosting', 'XGBR'
+'logistic', 'K-NN', 'SVM', 'decision-tree', 'random-forest',
+'ada-boost', 'gradient-boosting', 'XGBR', 'neural-network'
 ```
 
 The data argument could be any file path with data that has the same structure
-as ** data/raw/test.csv**.
+as **data/raw/test.csv**.
 
 It predicts data and saves the result as CSV to **data/predictions/** folder
 with the name of the original file and time stamp following it.

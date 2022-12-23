@@ -16,7 +16,7 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, \
 import xgboost as xgb
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
-from ..utils import find_threshold
+from src.utils import find_threshold
 
 
 def main():
@@ -55,7 +55,7 @@ def main():
             {'FPR': fpr, 'TPR': tpr, 'Thresholds': thresholds})
         best_treshold_ = find_threshold(roc_vals)
         thresholds_ = json.load(open(threshold_file))
-        thresholds_[model_name] = best_treshold_
+        thresholds_[model_name] = float(best_treshold_)
         json.dump(thresholds_, open(threshold_file, 'wt'))
 
     def train_deploy(model_class, X, model_name, **kwargs):
@@ -68,12 +68,14 @@ def main():
 
     log_final = train_deploy(LogisticRegression, X_scaled,
                              '0.1-logisticregression',
-                             **{'C': 0.1, 'l1_ratio': 0.0, 'penalty': 'l1'})
+                             **{'C': 0.1, 'l1_ratio': 0.0, 'penalty': 'l1',
+                                'solver': 'saga'})
     knn_final = train_deploy(KNeighborsClassifier, X_scaled,
                              '0.2-knearestneighbors',
                              **{'n_neighbors': 15})
     svc_final = train_deploy(SVC, X_scaled, '0.3-supportvector',
-                             **{'C': 1, 'kernel': 'linear'})
+                             **{'C': 1, 'kernel': 'linear',
+                                'probability': True})
     tree_final = train_deploy(DecisionTreeClassifier, X, '0.4-decisiontree',
                               **{'criterion': 'gini', 'max_depth': 5,
                                  'min_impurity_decrease': 0.01,
