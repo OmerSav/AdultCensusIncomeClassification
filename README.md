@@ -102,120 +102,85 @@ To validate, k-fold cross-validation was used on the training set.
 If you would like to you can also see the training set performance from
 **reports/0.2-os-train-models.pdf**.
 
-##### Test Set Performances
-
-# Tablo degisecek
+##### Test Set Macro Avg. Performances
 
 <table class="dataframe" style="border:1; border-color: grey">
-  <thead>
+<thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>R2</th>
-      <th>MAE</th>
-      <th>MSE</th>
-      <th>RMSE</th>
-      <th>RMSLE</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1-score</th>
+      <th>accuracy</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Multiple Regression</th>
-      <td>0.851</td>
-      <td>16853.092</td>
-      <td>696571233.702</td>
-      <td>26392.635</td>
-      <td>0.157</td>
+      <th>Logistic Regression</th>
+      <td>0.7562</td>
+      <td>0.8226</td>
+      <td>0.7741</td>
+      <td>0.8145</td>
     </tr>
     <tr>
-      <th>Polinomial Regression</th>
-      <td>0.546</td>
-      <td>24949.286</td>
-      <td>2564744078.439</td>
-      <td>50643.302</td>
-      <td>0.217</td>
+      <th>K-Nearest Neighbors</th>
+      <td>0.7206</td>
+      <td>0.7909</td>
+      <td>0.7314</td>
+      <td>0.7709</td>
     </tr>
     <tr>
-      <th>Lasso Regression (l1 regularization)</th>
-      <td>0.886</td>
-      <td>14843.647</td>
-      <td>529524008.165</td>
-      <td>23011.388</td>
-      <td>0.132</td>
-    </tr>
-    <tr>
-      <th>Ridge Regression (l2 regularization)</th>
-      <td>0.887</td>
-      <td>14888.542</td>
-      <td>526874799.133</td>
-      <td>22953.753</td>
-      <td>0.133</td>
-    </tr>
-    <tr>
-      <th>ElasticNet Regression (l1 and l2 regularization)</th>
-      <td>0.883</td>
-      <td>15103.082</td>
-      <td>544291083.688</td>
-      <td>23330.046</td>
-      <td>0.132</td>
-    </tr>
-    <tr>
-      <th>Support Vector Regression</th>
-      <td>0.293</td>
-      <td>39896.220</td>
-      <td>3308174465.590</td>
-      <td>57516.732</td>
-      <td>0.306</td>
+      <th>Support Vector Machine</th>
+      <td>0.7418</td>
+      <td>0.8204</td>
+      <td>0.7542</td>
+      <td>0.7895</td>
     </tr>
     <tr>
       <th>Decision Tree</th>
-      <td>0.717</td>
-      <td>24569.233</td>
-      <td>1321987229.902</td>
-      <td>36359.142</td>
-      <td>0.198</td>
+      <td>0.6970</td>
+      <td>0.7739</td>
+      <td>0.6857</td>
+      <td>0.7140</td>
     </tr>
     <tr>
       <th>Random Forest</th>
-      <td>0.864</td>
-      <td>16378.079</td>
-      <td>635300656.327</td>
-      <td>25205.171</td>
-      <td>0.147</td>
+      <td>0.7447</td>
+      <td>0.8133</td>
+      <td>0.7608</td>
+      <td>0.8010</td>
     </tr>
     <tr>
       <th>Ada Boost</th>
-      <td>0.810</td>
-      <td>21721.918</td>
-      <td>886924139.055</td>
-      <td>29781.271</td>
-      <td>0.192</td>
+      <td>0.7688</td>
+      <td>0.8384</td>
+      <td>0.7879</td>
+      <td>0.8259</td>
     </tr>
     <tr>
       <th>Gradient Boosting</th>
-      <td>0.878</td>
-      <td>14810.326</td>
-      <td>569118586.082</td>
-      <td>23856.206</td>
-      <td>0.133</td>
+      <td>0.7729</td>
+      <td>0.8412</td>
+      <td>0.7925</td>
+      <td>0.8305</td>
     </tr>
     <tr>
       <th>eXtreme Gradient Boosting</th>
-      <td>0.866</td>
-      <td>15624.645</td>
-      <td>623024752.327</td>
-      <td>24960.463</td>
-      <td>0.138</td>
+      <td>0.7712</td>
+      <td>0.8411</td>
+      <td>0.7906</td>
+      <td>0.8282</td>
     </tr>
     <tr>
       <th>Neural Network</th>
-      <td>0.874</td>
-      <td>16079.370</td>
-      <td>585419850.640</td>
-      <td>24195.451</td>
-      <td>0.144</td>
+      <td>0.7435</td>
+      <td>0.8087</td>
+      <td>0.7600</td>
+      <td>0.8019</td>
     </tr>
   </tbody>
 </table>
+
 
 ## Custom Data Preparation & Training & Prediction
 
