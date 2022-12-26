@@ -13,6 +13,7 @@ from src.utils import build_features
 model_names = ['logistic', 'K-NN', 'SVM', 'decision-tree', 'random-forest',
                'ada-boost', 'gradient-boosting', 'XGBR', 'neural-network']
 
+scaled_models = ['logistic', 'K-NN', 'SVM', 'neural-network']
 
 @click.command()
 @click.option('--model', help='Model name to use.')
@@ -52,11 +53,13 @@ def main(model, data_path):
     df_final = build_features(df, enc)
     if 'income' in df_final.columns:
         df_final.drop('income', axis=1, inplace=True)
-    # num cols after transformation 304
-    # if df_final.shape[1] != 304:
-    #     raise Exception(logger.info(f'Inputted data shape wrong!'))
-    sc = joblib.load(feature_build_path / '0.2-standardscaler.joblib')
-    X = sc.transform(df_final)
+    # num cols after transformation 107
+    if df_final.shape[1] != 107:
+        raise Exception(logger.info(f'Inputted data shape wrong!'))
+    X = df_final
+    if model in scaled_models:
+        sc = joblib.load(feature_build_path / '0.2-standardscaler.joblib')
+        X = sc.transform(df_final)
 
     predictions = mdl.predict(X)
     time_var = str(datetime.datetime.now()).replace(' ', '_').replace(':',
